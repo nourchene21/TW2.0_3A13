@@ -10,7 +10,7 @@ class User (AbstractUser):
     pass  ##pas d'attributs spécifiques, il les hérite
 
 number_validator = RegexValidator(regex=r'^\d{8}$', message="le numero de téléphone doit contenir exactement 8 chiffres.")
-def birth_date_validator(date):
+def birth_date_validator(date): #validateur coté formulaire 
     if date >= timezone.now().date(): ##ou timezone.localdate()
         raise ValidationError("La date de naissance doit être antérieure à la date actuelle.")
     
@@ -18,6 +18,9 @@ class Doctor (User):
     license_number = models.CharField(max_length=6, unique=True, validators=[MinLengthValidator(6), MaxLengthValidator(6)])
     phone = models.CharField(max_length=8, validators=[number_validator])
     specialties = models.ManyToManyField("AccountApp.Specialty", related_name="doctors")
+    class Meta():
+        verbose_name = "Doctor"
+        verbose_name_plural = "Doctors"
 
 class Patient (User):
     national_id = models.CharField(max_length=8, unique=True, validators=[number_validator])
